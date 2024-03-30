@@ -3,10 +3,11 @@ import math
 import random
 
 import numpy as np
+from matplotlib import pyplot as plt
+import matplotlib.patches as patches
 
 bullet_max_velocity = 1800
 bullet_min_velocity = 330
-bullet_velocity = (bullet_max_velocity + bullet_min_velocity) / 2
 # Metres per second
 
 bullet_angle = 30
@@ -31,10 +32,12 @@ shot_attempts = 0
 # Number of shots fired
 
 hit_target = False
+# Boolean
 
 print("Welcome to the Physics Engine version 1.1")
 
 while not hit_target:
+    bullet_velocity = (bullet_max_velocity + bullet_min_velocity) / 2
     if target_distance <= bullet_fly_distance <= target_distance + target_size:
         hit_target = True
         print("Target hit!")
@@ -48,18 +51,34 @@ while not hit_target:
         print("Firing point ground clearance: ", firing_point_ground_clearance)
         break
     else:
-        bullet_x_axis_velocity = round((math.sin(math.radians(bullet_angle))) * bullet_velocity)
-        bullet_y_axis_velocity = round((math.cos(math.radians(bullet_angle))) * bullet_velocity)
+        bullet_x_axis_velocity = round((math.cos(math.radians(bullet_angle))) * bullet_velocity)
+        bullet_y_axis_velocity = round((math.sin(math.radians(bullet_angle))) * bullet_velocity)
 
-        bullet_fly_time = round((bullet_y_axis_velocity / 9.8) / 2)
+        bullet_fly_time = round(((bullet_y_axis_velocity / 9.8) * 2))
         bullet_fly_distance = round(bullet_x_axis_velocity * bullet_fly_time)
 
         if target_distance >= bullet_fly_distance:
             print("Mermi öne düştü")
-            bullet_velocity = bullet_velocity + 20
+            bullet_min_velocity = bullet_velocity
         elif bullet_fly_distance >= target_distance + target_size:
             print("The bullet fell behind the target!")
-            bullet_velocity = bullet_velocity - 20
-        else:
-            print("Something went wrong!")
+            bullet_max_velocity = bullet_velocity
+
         shot_attempts += 1
+
+fig, ax = plt.subplots()
+square = patches.Rectangle((target_distance, 0), target_size, 200, edgecolor='red', facecolor='red')
+ax.add_patch(square)
+
+# Sınırları işaretlemelerle uyumlu hale getirin
+plt.xlim(0.0, target_distance + target_size + 5000)
+plt.ylim(0.0, target_distance)
+
+plt.gca().set_aspect('equal', adjustable='box')  # Ensures equal aspect ratio
+
+# Her 500 binde bir göster
+plt.xticks(range(0, int(target_distance + target_size + 5000) + 1, 2500))
+plt.yticks(range(0, int(target_distance) + 1, 2500))
+
+plt.title('Square Plot with add_patch() - Different Scales')
+plt.show()
