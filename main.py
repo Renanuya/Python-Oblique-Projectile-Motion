@@ -49,10 +49,10 @@ while not hit_target:
         bullet_fly_distance = round(bullet_x_axis_velocity * bullet_fly_time)
 
         if target_distance >= bullet_fly_distance:
-            print("Mermi öne düştü")
+            print("The bullet fell in front of the target.")
             bullet_min_velocity = bullet_velocity
         elif bullet_fly_distance >= target_distance + target_size:
-            print("The bullet fell behind the target!")
+            print("The bullet hit behind the target.")
             bullet_max_velocity = bullet_velocity
 
         shot_attempts += 1
